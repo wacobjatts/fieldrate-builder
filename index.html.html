@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FieldRate Builder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --surface: #1a1a1a;
+            --border: #333;
+            --text: #e0e0e0;
+            --accent: #00d4ff;
+            --accent-glow: rgba(0, 212, 255, 0.2);
+            --muted: #888;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg);
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .brand p {
+            margin: 0.1rem 0 0;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .status {
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        button {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        #exportZip {
+            background: var(--accent);
+            color: var(--bg);
+            font-weight: 600;
+            border: none;
+        }
+
+        #exportZip:hover {
+            background: #fff;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .editors {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+        }
+
+        .editor-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .editor-group:last-child { border-bottom: none; }
+
+        .editor-label {
+            padding: 0.4rem 1rem;
+            font-size: 0.65rem;
+            font-weight: bold;
+            color: var(--muted);
+            background: #111;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        textarea {
+            flex: 1;
+            width: 100%;
+            background: transparent;
+            color: #ccc;
+            border: none;
+            padding: 1rem;
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 0.85rem;
+            resize: none;
+            outline: none;
+            line-height: 1.4;
+        }
+
+        .preview-container {
+            flex: 1;
+            background: #fff;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <h1>FieldRate Builder</h1>
+            <p>Turn real input into better output through iteration</p>
+        </div>
+        <div class="controls">
+            <span class="status" id="statusText">Ready</span>
+            <button id="previewBtn">Preview</button>
+            <button id="exportZip">Export ZIP</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="editors">
+            <div class="editor-group">
+                <div class="editor-label">HTML</div>
+                <textarea id="builderHtml" spellcheck="false" placeholder="">
+<div class="card">
+  <h1>Iterate</h1>
+  <p>Build, change, track, save, restore, improve.</p>
+  <button onclick="ping()">Action</button>
+</div>
+                </textarea>
+            </div>
+            <div class="editor-group">
+                <div class="editor-label">CSS</div>
+                <textarea id="builderCss" spellcheck="false" placeholder="/* CSS */">
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  font-family: sans-serif;
+}
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  text-align: center;
+}
+button {
+  background: #00d4ff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+                </textarea>
+            </div>
+            <div class="editor-group">
+                <div class="editor-label">JS</div>
+                <textarea id="builderJs" spellcheck="false" placeholder="// JS">
+function ping() {
+  alert('Success. The loop continues.');
+}
+                </textarea>
+            </div>
+        </div>
+
+        <div class="preview-container">
+            <iframe id="preview"></iframe>
+        </div>
+    </main>
+
+    <script>
+        const htmlInput = document.getElementById('builderHtml');
+        const cssInput = document.getElementById('builderCss');
+        const jsInput = document.getElementById('builderJs');
+        const previewFrame = document.getElementById('preview');
+        const previewBtn = document.getElementById('previewBtn');
+        const exportBtn = document.getElementById('exportZip');
+        const statusText = document.getElementById('statusText');
+
+        function generateSource() {
+            return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FieldRate Export</title>
+<style>
+${cssInput.value}
+</style>
+</head>
+<body>
+${htmlInput.value}
+<script>
+${jsInput.value}
+<\/script>
+</body>
+</html>`;
+        }
+
+        function updatePreview() {
+            const source = generateSource();
+            const blob = new Blob([source], { type: 'text/html' });
+            previewFrame.src = URL.createObjectURL(blob);
+            statusText.textContent = "Preview Updated";
+            setTimeout(() => { statusText.textContent = "Saved"; }, 2000);
+        }
+
+        async function exportToZip() {
+            const zip = new JSZip();
+            zip.file("index.html", generateSource());
+            
+            const blob = await zip.generateAsync({type:"blob"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "FieldRate_Build.zip";
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            statusText.textContent = "ZIP Exported";
+        }
+
+        [htmlInput, cssInput, jsInput].forEach(el => {
+            el.addEventListener('input', () => { statusText.textContent = "Modified..."; });
+        });
+
+        previewBtn.addEventListener('click', updatePreview);
+        exportBtn.addEventListener('click', exportToZip);
+
+        window.onload = updatePreview;
+    </script>
+</body>
+</html>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
